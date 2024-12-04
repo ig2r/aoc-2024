@@ -12,8 +12,8 @@ let parseLine line =
 
 let ls, rs =
   input
-    |> Array.map parseLine
-    |> Array.fold (fun (xs, ys) (x, y) -> (x :: xs, y :: ys)) ([], [])
+  |> Array.map parseLine
+  |> Array.fold (fun (xs, ys) (x, y) -> (x :: xs, y :: ys)) ([], [])
 
 // Compute absolute pairwise distances between elements in sorted lists, then sum these distances to obtain total distance.
 let ls_sorted, rs_sorted = (List.sort ls), (List.sort rs)
