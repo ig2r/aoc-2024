@@ -22,6 +22,7 @@ let ls, rs =
   |> partitionList
 
 // Compute absolute pairwise distances between elements in sorted lists, then sum these distances to obtain total distance.
-let deltas = List.map2 (fun (l: int) (r: int) -> Math.Abs(l - r)) (ls |> List.sort) (rs |> List.sort)
+let ls_sorted, rs_sorted = (List.sort ls) (List.sort rs)
+let deltas = List.map2 (fun (l: int) (r: int) -> Math.Abs(l - r)) ls_sorted rs_sorted
 let totalDist = List.fold (fun sum delta -> sum + delta) 0 deltas
 printfn "Total distance: %d" totalDist
