@@ -2,27 +2,21 @@ open System
 open System.IO
 open System.Text.RegularExpressions
 
-let input = File.ReadAllText("input.txt")
+let input = File.ReadAllLines("input.txt")
+let re = new Regex(@"(\d+)\s+(\d+)")
 
-let re = new Regex(@"\d+")
+let parseLine line =
+  let groups = re.Match(line).Groups
+  let x, y = (Int32.Parse groups[1].Value), (Int32.Parse groups[2].Value)
+  x, y
 
-let partitionList (xs: 'a list) =
-  let folder (ls, rs, i) x =
-    if i % 2 = 0
-    then (x::ls, rs, i + 1)
-    else (ls, x::rs, i + 1)
-  let ls, rs, _ = List.fold folder ([], [], 0) xs
-  ls, rs
-
-// Apply regex to extract all numbers, parse, then split alternatingly into two evenly-sized lists (ls, rs).
 let ls, rs =
-  re.Matches(input)
-  |> Seq.toList
-  |> List.map (fun m -> Int32.Parse m.Value)
-  |> partitionList
+  input
+    |> Array.map parseLine
+    |> Array.fold (fun (xs, ys) (x, y) -> (x :: xs, y :: ys)) ([], [])
 
 // Compute absolute pairwise distances between elements in sorted lists, then sum these distances to obtain total distance.
-let ls_sorted, rs_sorted = (List.sort ls) (List.sort rs)
+let ls_sorted, rs_sorted = (List.sort ls), (List.sort rs)
 let deltas = List.map2 (fun (l: int) (r: int) -> Math.Abs(l - r)) ls_sorted rs_sorted
 let totalDist = List.fold (fun sum delta -> sum + delta) 0 deltas
 printfn "Total distance: %d" totalDist
