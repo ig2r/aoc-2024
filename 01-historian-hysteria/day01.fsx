@@ -4,7 +4,7 @@ open System.Text.RegularExpressions
 
 let input = File.ReadAllText("input.txt")
 
-let re = new Regex("\d+")
+let re = new Regex(@"\d+")
 
 let partitionList (xs: 'a list) =
   let folder (ls, rs, i) x =
