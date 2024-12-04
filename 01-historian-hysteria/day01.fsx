@@ -7,10 +7,10 @@ let input = File.ReadAllText("input.txt")
 let re = new Regex("\d+")
 
 let partitionList (xs: 'a list) =
-  let folder (state: 'a list * 'a list * int) elem =
-    match state with
-    | (ls, rs, i) when i % 2 = 0 -> (elem::ls, rs, i + 1)
-    | (ls, rs, i) -> (ls, elem::rs, i + 1)
+  let folder (ls, rs, i) x =
+    if i % 2 = 0
+    then (x::ls, rs, i + 1)
+    else (ls, x::rs, i + 1)
   let ls, rs, _ = List.fold folder ([], [], 0) xs
   ls, rs
 
@@ -23,5 +23,5 @@ let ls, rs =
 
 // Compute absolute pairwise distances between elements in sorted lists, then sum these distances to obtain total distance.
 let deltas = List.map2 (fun (l: int) (r: int) -> Math.Abs(l - r)) (ls |> List.sort) (rs |> List.sort)
-let totalDist = List.fold (fun state delta -> state + delta) 0 deltas
+let totalDist = List.fold (fun sum delta -> sum + delta) 0 deltas
 printfn "Total distance: %d" totalDist
