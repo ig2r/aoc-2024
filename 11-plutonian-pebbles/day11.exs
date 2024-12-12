@@ -25,9 +25,13 @@ end
 
 blink_once = fn pebble_counts ->
   pebble_counts
-  |> Enum.map(fn {pebble, count} -> {transmogrify.(pebble), count} end)
-  |> Enum.flat_map(fn {ts, count} -> Enum.map(ts, fn t -> {t, count} end) end)
-  |> Enum.reduce(Map.new(), fn {t, c}, acc -> Map.update(acc, t, c, fn v -> v + c end) end)
+  |> Enum.flat_map(fn {p, c} ->
+    ts = transmogrify.(p)
+    Enum.map(ts, fn t -> {t, c} end)
+  end)
+  |> Enum.reduce(
+    Map.new(),
+    fn {t, c}, acc -> Map.update(acc, t, c, fn v -> v + c end) end)
 end
 
 blink_times = fn pebble_counts, n ->
