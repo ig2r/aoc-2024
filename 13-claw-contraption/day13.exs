@@ -12,7 +12,7 @@ parse_coords = fn line ->
   |> Enum.map(&String.to_integer/1)
 end
 
-epsilon = 0.00001
+epsilon = 0.000001
 
 price = fn lines ->
   [button_a_line, button_b_line, prize_line | _] = lines
@@ -20,8 +20,10 @@ price = fn lines ->
   # Solve linear equation AX = B for X.
   button_a_xy = parse_coords.(button_a_line)
   button_b_xy = parse_coords.(button_b_line)
-  a = Nx.tensor([button_a_xy, button_b_xy]) |> Nx.transpose()
+  a = Nx.tensor([button_a_xy, button_b_xy], type: :f64) |> Nx.transpose()
   b = Nx.tensor(parse_coords.(prize_line))
+  # USE THE FOLLOWING LINE INSTEAD TO SOLVE PT2.
+  # b = Nx.tensor(parse_coords.(prize_line) |> Enum.map(fn x -> x + 10000000000000 end), type: :f64)
   x = Nx.LinAlg.solve(a, b)
 
   # Sum error squares to gauge if there's an integer solution.
